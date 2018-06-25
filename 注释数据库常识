@@ -1,0 +1,234 @@
+1 全球蛋白资源数据库UniProt
+
+Uniprot是一个集中收录蛋白质资源并能与其他资源相互联系的数据库，也是目前为止收录
+蛋白质序列目录最广泛、功能注释最全面的一个数据库。Uniprot是由欧洲生物信息学研究生（EUROPEAN BIOINFOR-
+MATICS INSTITUTE）、美国蛋白质信息资源（PRONTEIN INFORMATION RESOURCE）、瑞士生物信息研究生（Swiss
+institute of bioinformatics）等机构共同组成的Uniprot协会编辑，制作的一个信息资源。
+
+1.1 uniprot数据库的构成
+uniprot数据库由uniprot知识库（uniprotKB）、uniprot档案（uniparc）、uniprot参考资料库（uniref）
+以及uniprot元基因组学与环境微生物序列数据库（uniMES）构成。
+
+1.1.1 uniprot知识库
+uniprot知识库是一个专家级的数据库，它可以通过与其他资源进行交互查找的方式为用户提供一个有关目的
+蛋白质的全面的综合信息。
+uniprotKB包括两个组成部分：uniprotKB/Swiss-prot与uniprotKB/TrEMBL
+
+1.1.1.1 UniprotKB/Swiss-Prot
+UniprotKB/Swiss-Prot主要收录人工注释的序列及其相关文献信息和经过计算机辅助分析的序列。这些注释多是由专业的生物学家给出的
+在UniprotKB中，注释包括对蛋白质功能、酶学特性、具有生物学意义的相关结构域及位点、翻译后修饰情况、亚细胞定位
+组织特异性、发育阶段特异性、结构、相互作用、剪接异构体、相关疾病信息的注释等等。注释的另一个重要工作就是对同
+一蛋白的所有相关报道进行归纳、总结。对蛋白质序列进行仔细检查之后，注释人员还会将相关参考序列、剪接变异体、基
+因变异体和疾病相关信息全都整合起来，而且不同序列间有任何的差异也会标示出来。注释人员还会将蛋白
+质数据与其它核酸数据库 、物种特异性数据库 、结构域数据库 、家族遗传史或疾病资料数据库进行交叉参考。
+1.1.1.2 UniProtKB/TrEMBL
+UniProtKB/TrEMBL 收录的则是高质量的经计算机分析后进行自动注释和分类的序列 。 计算机辅助
+注释使用的是 Spearmint 规则 ， 而人工注释依据的则是蛋白质家族规则 ， 包括 HAMAP 家族规则 （ HAMAP
+family rules ）、 RuleBase 规则 、 PIRSF 分类命名规则以及位点规则 。 UniProtKB/TrEMBL 还收录了所有
+EMBL-Bank/ GenBank/DDBJ 核酸序列数据库中的编码序列的翻译后蛋白质序列和来自拟南芥信息资源库
+（TAIR）、SGD和人类Ensembl数据库中序列的翻译后蛋白质序列。其中 ， 研究人员排除了诸如 EMBL-Bank/ GenBank/DDBJ 
+数据库中编码小片段的序列 、 人工合成的序列 、 大部分非胚系免疫球蛋白序列 、 大部分 T 细胞受体序列 、 
+大部分专利序列和一些高度过表达的序列 。 这些选择的记录都是经过大量人工注释的，然后根据注释的情况收入UniProtKB/Swiss-Prot 数据库。
+
+1.2 UniProt档案（UniParc）
+UniProt 档案则是关于蛋白质序列的全面数据库，它储存了大量的蛋白质序列资源，反映了所有蛋白质
+序列的历史。
+UniParc是储存序列的数据库，同时也是最全面的能反映所有蛋白质序列历史的数据库。UniParc收录了
+不同数据库来源的所有的最新蛋白质序列和修订过的蛋白质序列，因此可以保证数据收录的全面性。
+UniParc数据库收录的资源
+         UniProtKB数库据                              NCBI的RefSeq数据库
+         EMBL-Bank/DDBJ/GenBank这些核酸数据库中核酸
+   模式生物数据库FlyBase
+         序列的翻译后序列
+         Ensembl数据库中真核生物基因组数据                      SGD
+         H-邀请数据库（H-Inv）                            TAIR
+         脊椎动物基因组注释数据库（VEGA）                        WormBase
+         IPI数据库                                    TROME
+         蛋白质研究基金会数据库（PRF）                          美国、欧洲、韩国、日本专利局中的数据
+         蛋白质数据库（PDB）
+     为了避免出现冗余数据，UniParc将所有完全一样的序列都合并成了一条记录，而不论这些数据是否来
+自同一物种。UniParc还会收录每天最新的数据和修改过的数据，并交叉参考这些数据，及时对UniParc中的
+数据做出修订 。 UniParc 中每一条记录包含的基本信息包括标识符 、 序列 、 循环冗余校验码 、 来源数据库中
+的检索号 、 版本号 、 时间印记 。 如果 UniParc 中的记录没有收录在 UniProtKB 中 ， 那么 这个基因可能是假基
+因。此外，除了给出每一条记录在来源数据库中的检索号之外还会给出这条记录在来源数据库中的状态，例
+如是仍然存在或者是已经被删除，也会给出NCBI GI号和TaxId号。UniParc中的记录都是没有注释的，因为
+蛋白质只有在指定的条件下才能够进行注释。例如，序列完全相同的蛋白质如果属于不同的物种、组织或不
+同的发育阶段，其功能都有可能完全不同。
+
+
+1.3 UniProt参考资料库（UniRef）
+UniProt参考资料库可以通过序列同一性对最相近的序列进行归并，加快搜索速度。
+UniRef对来自UniProtKB的各种数据包括各种剪接变异体进行了分类汇总，还从UniParc中选取了一些
+数据以求能完整的、没有遗漏的收录所有数据，同时也保证没有冗余数据，该数据库的同一性（identity）分
+为三个级别：100%、90%和50%。
+UniRef 里的数据是按照级别来分类的，在 UniRef 数据库的每一个同一性级别中，每一条序列只会属于
+其中的一个聚类，这条序列在其它的同一性级别中也只会有一条父集（ parent cluster ）序列和子集（ child
+cluster ）序列 。UniRef100 数据库将相同的序列数据和亚片段数据整合在一起 ，使用一个检索入口进行检
+索。
+UniRef90 数据库建立在UniRef100数据库的基础之上，而 UniRef50数据库又是以UniRef90为基础 。
+UniRef100 、UniRef90和UniRef50 这三个数据库的数据量分别减少10 % 、40 % 和70 % 。 每一个聚类记录都
+包含下列信息：数据来源、蛋白质名称、分类学信息 （ 但只会举一个蛋白质为代表 ）、 聚类下条目数等。
+UniRef100是目前最全面的非冗余蛋白质序列数据库。UniRef90和UniRef50数据量有所减少是为了能更快地
+进行序列相似性搜索以减少结果的误差。UniRef现在已广泛用于自动基因组注释、蛋白质家族分类、系统生
+物学、结构基因组学、系统发生分析、质谱分析等各个研究领域。UniRef中的聚类信息是会随着UniProtKB
+的更新而同步更新的。
+
+
+1.4 UniProt元基因组学与环境微生物序列数据库（UniMES）
+UniProt元基因组学与环境微生物序列数据库是为不断发展壮大的元基因组学研究领域服务的。
+UniProt Knowledgebase 中的 Swiss-Prot 和 TrEMBL 两个数据库包含了分类学信息明确的序列数据 。不过 ， 不断增多的元基因组数据迫使人们需要另外再建一个数据库 ， 即 UniMES 。 目前 ， UniMES 收录了来自全球海洋取样考察计划 （ GOS ） 得来的数据 ， 而 GOS 以前则将数据上传至国际核酸序列数据库协作体（ INSDC ）。 GOS 的数据包含有大约 2500 万条 DNA 序列 ， 估计可以编码大约 600 万种蛋白质 ， 这些序列都是来自于海洋微生物 。 UniMES 将这些可能的蛋白质序列和 InterPro 数据库自动分类 、 整理后的序列资源结合起来，成为了目前唯一能提供全球海洋取样考察计划获得的基因组信息数据库，同时它还是免费使用的。UniMES中的数据没有收录在UniProtKB和UniRef中，但UniParc中有收录。UniMES中的数据以FASTA形式储存，可以从FTP服务器上免费下载。
+
+
+2 新进展
+新的UniProt网站
+UniProt 协会发布了他们最新的官方网站 ， 该网站有新的界面 ， 新的搜索引擎 ， 有更多的新选项方便大
+家使用 。 之前的镜像网站 （ www.ebi.uniprot.org 、 www.expasy.uniprot.org 、 www.pir.uniprot.org 、 www.
+expasy.org）则都被取消了。UniProt还提供使用本体术语扩展查询结果的功能。
+同时 ， UniProt 对序列相似性搜索 、 多序列比对 、 分批处理和数据库标识符作图工具这些最常用的生物信息学工具也都进行了简化。
+用户还可以在 www.uniprot.org/help/technical 网站上通过简单的 HTTP （ REST ） 操作进行编程查询操作。
+网站上除了现有的文件格式 （ 例如纯文本格式 、 FASTA 格式 、 UniProtKB 中 的 XML 格式等 ） 之外还提供了可配置的空位分隔格式（tab-delimited）、RSS格式和GFF格式供用户下载资料，同时，所有的文件都有RDF格式（www.w3.org/RDF/）和在语义网（Semantic Web）上使用的W3C格式下载。更多信息请浏览www.uniprot.org/help/。
+
+
+3 UniProtKB附加的蛋白质文献信息
+UniProt 一直致力于将 UniProtKB 注释蛋白质时引用的文献等信息整合到 UniProt 中以供用户参考 。 目
+前 ， 有将近 218 , 000 条 PubMed 的文献被引用来注释 UniProtKB 中将近 410 万条序列 ， 而这些文献中有 66 % 都
+被收录到UniProtKB/Swiss-Prot中。其它诸如Entrez Gene数据库、模式生物数据库（MOD）、SGD、MGI
+等公共数据库也都为每条基因或蛋白记录提供引用文献信息。对于那些在不同数据库中都被注释过的基因来
+说，每一个数据库都会根据自己的特点来有选择的引用相关文献进行注释。因此，将各种不同的数据库文献
+资源都整合到UniProtKB非常有必要。UniProt现在已经将收录人类、小鼠、酵母和其它物种基因或蛋白质信
+息的 5 个外部数据库的引用文献信息整合进来了 ， 这些外部数据库包括 ： Entrez Gene 里的 GeneRIF 数据库
+（www.ncbi.nlm.n ih.gov/projects/GeneRif）、SGD（www.yeastgenome.org）、MGI（www.informatics.
+jax.org）、GAD（geneticassociationdn.nih.gov）以及PDB（www.rcsb.org/pdb/）。
+上述5个外部数据库中共整合了约244, 000 条来自 PubMed同时UniProtKB 中还不曾收录的引用文献， 这
+些文献涵盖了 UniProtKB 中约 110 , 000 条记录 。 其它额外的文献记录都直接链接到 UniProt 蛋白质查询网页上
+了 。 UniProt 还将继续从其它 MOD 数据库和蛋白质功能数据库中发掘更多的文献资料补充到 UniProtKB 中 。
+这些补充的文献资料不仅有利于对UniProtKB中的记录进行注释，同时也有利于帮助用户发掘出更多他们感
+兴趣的蛋白的资料。
+
+4 格式改变
+UniProt格式的改变是为了改善资料的一致性（consistency）和可用性（usability）。UniProt建议用户
+密切关注它的newsfeeds，以充分利用这些改变带来的便利。最近几个月来发生的以及在未来几个月里将要
+发生的格式变化，请浏览www. uniprot.org/。
+
+5 UniProtKB注释
+UniProtKB包括两个部分：Swiss-Prot和TrEMBL。
+UniProtKB/Swiss-Prot包含人工注释的记录，及其相关参考文献和计算机辅助分析信息。人工注释信息
+包括蛋白质序列和试验证据或计算机预测信息。还有许多生物学专家不断的对这些数据进行完善和补充。对
+UniProtKB/Swiss-Prot中的记录进行注释的工作可以分为两个部分：模式生物的注释以及横向注释。
+5.1 模式生物的注释
+UniProtKB/Swiss-Prot对许多物种的蛋白质进行了注释，但主要还是集中在对分类清楚的模式生物蛋白
+的注释上，因为只有这样才能保证对每一个蛋白质家族的“代表”做出高质量的注释。
+                               被注释的模式生物包括
+          人类及其它哺乳动物、相关数据库HPI                 病毒
+          细菌和古细菌、相关数据库HAMAP                  毒素、相关数据库Tox-Prot
+          植物、相关数据库PPAP                       果蝇、非洲蟾蜍、斑马鱼和秀丽隐杆线虫
+          真菌、相关数据库FPAP
+5.2 横向注释（Transversal annotation）
+横向注释主要关注存在于所有物种中的普遍现象，例如翻译后修饰（PTM）、蛋白质结构信息、蛋白间
+相互作用等。了解更多内容请浏览www.uniprot.org/help/projects
+6 第一张完整的人类基因组草图
+    最近收录在 UniProtKB/Swiss-Prot 中的注释成果就是完成了对第一张完整的人类基因组草图的注释工
+作 。 这意味着在 UniProt 1 4 . 1 版本中可以查询到所有已知人类蛋白编码基因的人工注释结果 。 在该版本发布
+时共收录了 20 , 325 条记录 ， 其中超过 1 / 3 的记录还都收录有因可变剪接 、 可变启动子或可变翻译起始位点造
+成的异构体序列 。 因此该版本收录的蛋白质序列将近有 34 , 000 条 ， 还收录有大约 46 , 000 个单氨基酸多态性
+（SAP）和60,000个PTM，这些大部分都与人类疾病有关。
+    这已经不是 UniProtKB/Swiss-Prot 第一次对一个模式生物全蛋白质组进行注释了 ， 还曾经对大肠杆
+菌和酿酒酵母的全蛋白质组进行过注释 ， 将来还将对更多的如拟南芥 （Arabidopsis thaliana ）、 枯草芽
+孢杆菌 （Bacillus subtilis ）、 盘基网柄菌 （Dictyostelium discoi deum ）、 小鼠 、 水稻 、 金黄色葡萄球菌
+（Staphylococcus aureus ）、裂殖酵母（Schizosaccharomyces pombe ）等模式生物的全蛋白质组进行注
+释。不过可能这些工作不如对人类蛋白质组进行注释那么重要。
+    UniProt第一次能够向全世界清晰的展示一幅完整的（虽然不尽完美，但至少UniProt认为是完整的）人
+类蛋白质图画。能在分子水平对人类蛋白质有一个总体的了解是全世界生物学家共同的最终目标，UniProt希
+望这项工作能帮助科学家早日实现这个愿望。不过还有许多难题等待着人们去解决。人们还将继续收录新发
+现的人类蛋白质，不断整理、修改已经收录的记录，收录更多的剪接变异体，发现更多的PTM。总之，就是
+不断完善人类蛋白质组数据库。分子水平的研究成果也应该放到生理水平，例如亚细胞定位、组织表达和蛋
+白相互作用等水平去进行验证。
+
+
+2 Swiss-prot注释
+
+swiss-prot 数据库中的蛋白质的功能是经过试验验证的，注释是精确的。
+但是其中的蛋白质数目相比于NR库就非常少，仅有约45万条。
+
+
+3 COG/KOG注释
+
+COG数据库是NCBI开发的用于同源蛋白注释的数据库。
+COG数据库根据蛋白质序列的相似性，将蛋白质序列分成不同的类。每个类赋予一个COG编号，代表着一种同源蛋白。
+同时，将所有的同源蛋白再分成25个大类。此外，COG数据库包含COG和KOG共2个数据库。前者对原核生物的同源蛋白进行聚类，适合原核生物的COG注释；
+后者对真核生物的同源蛋白进行聚类，适合真核生物的COG注释。
+蛋白质直系同源簇（COGs）数据库是对细菌、藻类和真核生物的21个完整基因组的编码蛋白，根据系统进化关系分类构建而成
+COG库对于预测单个蛋白质的功能和整个新基因组中蛋白质的功能多很重要。利用cognitor程序，可以把某个蛋白质与所有COGs中的
+蛋白质进行比对，并把它归入适当的COG簇。
+
+4 NR库
+
+NR 数据库简介
+
+目前有很多的数据库都存储了蛋白序列，比如NCBI Refseq, protein, swissprot 等，在各个数据库之间，或者是在某个数据库中，蛋白序列有大量冗余；
+为了方便使用，ncbi 构建了nr 库， 全称是 RefSeq non-redundant proteins；
+
+Non-redundant protein sequences from GenPept,  Swissprot, PIR, PDF, PDB, and NCBI RefSeq
+
+完整的nr 数据库的蛋白序列和预先构建好的blast 索引可以从ncbi 的ftp 服务器上下载得到，地址如下：
+
+https://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/
+
+通常情况下，我们直接下载构建好的blast 索引就可以了，因为
+
+1) 整个nr 的蛋白序列非常大，大概30G 左右，如果自己构建索引，非常费时；
+
+2）ncbi 提供的blast索引，在构建时已经把每条序列的种水平的tax id 加进去了，用这个索引可以非常方便的得到序列对应的物种注释信息；
+
+3） 使用blastdbcmd 命令可以从索引中还原出原始的nr 序列；
+
+对于NCBI ftp 的数据，我们可以用aspera进行下载， 速度非常快
+
+ascp -i ~/asperaweb_id_dsa.openssh  -QTr -l6000m  anonftp@ftp-private.ncbi.nlm.nih.gov:/blast/db/FASTA/nr.00.tar.gz ./
+
+由于nr 库较大，所以 ncbi 把 nr 库分成了很多小份的fasta 序列，建立索引
+
+对于nr 的序列而言，其标识符中包含了很多的信息
+
+>XP_642131.1 hypothetical protein DDB_G0277827 [Dictyostelium discoideum AX4]P54670.1 RecName: Full=Calfumirin-1; Short=CAF-1BAA06266.1 calfumirin-1 [Dictyostelium discoideum AX2]EAL68086.1 hypothetical protein DDB_G0277827 [Dictyostelium discoideum AX4]
+
+首先是1个蛋白序列的编号，后面是这条序列对应的详细信息，方括号内是物种名称； 由于nr 库是非冗余的，这里的每一条蛋白序列可以理解为 一个聚类的group 中的代表序列，第一条是该代表序列本身的信息，后面几条是属于这个group 下的其他序列的信息；
+
+这里有两种情况，
+
+1） 这一个group 中所有的蛋白序列都来源于同一个物种；
+
+WP_003131952.1 30S ribosomal protein S18 [Lactococcus lactis]
+
+2） 这一个group 中所有的蛋白序列都来源于多个物种；
+
+WP_000184067.1 MULTISPECIES: MbtH family protein [Bacillus]
+
+唯一不同的是，当来源于多个物种时，会在前面加上 MULTISPECIES 关键字
+
+对于nr 中的序列，其标识符有两种：
+
+1） WP 开头 ：真实存在的蛋白序列
+
+2）XP 开头： 理论上的蛋白序列（计算机软件预测的结果）
+
+通常情况下，我们比对nr 库有两种用途：
+
+1）蛋白质功能注释： 需要输出蛋白质的描述信息
+
+对于这个需求，nr 库里包含了这些信息，所以比较简单，直接blast 比对，在输出结果中输出这个信息就可以了
+
+2） 物种注释：输出蛋白对应的物种信息
+
+在序列中有明确的 species 水平的注释，但是我们还需要phylum 等水平的注释，这时候就需要借助Taxonomy 数据库，把物种注释信息补充完整。
+
+5 Pfam
+蛋白一般由一个或多个功能域所组成，在不同蛋白质组合中出现的不同结构域导致了自然界中蛋白质复杂的多样性。
+鉴定一个蛋白中的结构域有助于更深入地理解蛋白功能。
+Pfam是一个大型蛋白结构域家族的数据库，每个蛋白家族都由多个序列比对和HMMs（hidden Markovmodels，隐马尔可夫模型）所体现。
+Pfam包括两个质量级别的家族数据库：Pfam-A和Pfam-B。
+Pfam-A来自基础序列数据库Pfamseq，是根据最新的UniProtKB数据建立的，质量较高。
+Pfam-B做为Pfam-A的补充，是一个未注释的低质量数据库，一般是由ADDA数据中的非冗余cluster自动生成的。
+虽然质量较低，但对于鉴定Pfam-A无法覆盖到的功能保守区域是非常有用的。
+
+
