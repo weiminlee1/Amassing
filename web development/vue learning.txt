@@ -1,1 +1,54 @@
-hello world
+npm 运行项目
+1，下载nodejs,安装npm
+npm set registry=http://registry.npm.taobao.org 设置镜像
+npm get registry 查看镜像
+npm install vue -g
+npm install vue-router -g
+npm install vue-cli -g
+
+npm install
+2，进入项目目录 cd vue
+3，安装依赖包 npm install
+报错：1：npm版本太低（npm install npm -g）-g 加载到全局变量；
+2：项目上的包版本不兼容，删除项目里的node module；
+3：改变package.json里面各种包的版本信息，比如vue, node, npm...
+4, 运行项目 npm run dev
+备注：如果localhost8080页面打不开，更改项目里的config下的index.js文件里的：autoOpenBrowser:true
+
+
+
+Vue 学习
+ Vue是什么？是一套构建用户界面的渐进式框架
+ Vue-cli是快速构建这个单页应用的脚手架
+ 
+1.使用npm全局安装vue-cli（前提是你已经安装了nodejs，否则你连npm都用不了），在cmd中输入一下命令
+  npm install --global vue-cli
+2.安装完成后，创建自己的工作空间，在cmd切换至刚刚创建好的工作空间，如果已经有工作空间，
+直接切换到工作空间即可。使用命令创建项目
+  vue init webpack vuetest(vuetest是项目名称)
+3.项目目录
+build 里面是一些操作文件，使用npm run * 时其实执行的就是这里的文件
+config 配置文件，执行文件需要的配置信息
+src 资源文件，所有的组件以及使用的图片多放在这个文件夹里面
+  assets 资源文件夹：放图片之类的资源
+  components 组件文件夹，写的所有组件多放在这个文件夹下
+  router 路由文件夹，这个决定了页面的跳转规则
+  APP.vue 应用组件，所有自己写的组件，多是在这个组件之上运行
+  main.js    webpack入口文件
+ 
+ npm install 这一命令就按照项目的根目录下的package.json文件中的依赖的模块安装，
+ 这个文件里面是不允许有任何注释的，每个使用npm管理的项目多有这个文件，是npm操作的入口
+ 文件。
+ npm install packagename@version 安装指定的包到node modules这个目录
+ 
+ 
+ 4 打包
+ 将页面打包
+  npm run build
+ 打包完成后，会在根目录下生成一个dist文件夹，这就是最后的成品页面
+ 备注：资源加载失败，仔细检查下路径，将打包的路径改为相对路径，config\index.js文件中的
+ build对象，将assetsPublicPath中的"/",改为"./"即可。并在build\build.js将这两句的提示信息删掉或注释掉，
+ 再打包直接用浏览器直接运行就好了。
+ 
+ 
+ 
