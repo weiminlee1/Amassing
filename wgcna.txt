@@ -1,0 +1,469 @@
+library(WGCNA)
+library(scatterplot3d)
+options(stringsAsFactors = FALSE)
+enableWGCNAThreads(nThreads =20)
+myData = read.delim("C:/Users/Administrator/Desktop/test_WGCNA/tpm.txt", sep="\t", header=TRUE,check.names =F)
+dim(myData)
+names(myData)
+datExpr = as.data.frame(t(myData[, -c(1)]))
+datExpr2<-as.matrix(datExpr)
+mode(datExpr2) = "numeric"
+datExpr <- datExpr2
+colnames(datExpr) = myData$GeneID
+rownames(datExpr) = names(myData)[-c(1)]
+
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
+#datExpr=log2(datExpr+1)
+##????Traits????
+if (FALSE) {
+    allTraits=read.delim("0", sep="\t",header=TRUE,row.names=1,check.names =F)
+    names(allTraits)
+    rownames(allTraits)
+    if (length(intersect(names(myData)[-1], rownames(allTraits)))!=nSamples ) {
+        print("The trait maxtix file is error ,please check the file ") 
+        q(save='no')
+    }
+} else {
+    allTraits=as.data.frame(diag(1,nSamples))
+	colnames(allTraits)=rownames(datExpr)
+	rownames(allTraits)=rownames(datExpr)
+}
+##?????????ͻ???
+gsg = goodSamplesGenes(datExpr, verbose = 3)
+if (!gsg$allOK)
+{
+if (sum(!gsg$goodGenes)>0)
+	printFlush(paste("Removing genes:", paste(names(datExpr)[!gsg$goodGenes], collapse = ", ")))
+if (sum(!gsg$goodSamples)>0)
+	printFlush(paste("Removing samples:", paste(rownames(datExpr)[!gsg$goodSamples], collapse = ", ")))
+	datExpr = datExpr[gsg$goodSamples, gsg$goodGenes]
+}
+##?????Ƿ??????Ե?outliers
+sampleTree = hclust(dist(datExpr), method = "average") #?????????????????????????(?????)
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/sampleClustering.pdf", width = 10, height = 4)
+par(cex = 1.0)
+par(mar = c(0,6,2,0))
+plot(sampleTree, main = "Sample clustering", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/sampleClustering.png", width = 1000, height = 400)
+par(cex = 1.0)
+par(mar = c(0,6,2,0))
+plot(sampleTree, main = "Sample clustering", sub="", xlab="", cex.lab = 1.5, cex.axis = 1.5, cex.main = 2)
+dev.off()
+##????????֯?????Է???
+datTraits = allTraits
+collectGarbage();
+sampleTree2 = hclust(dist(datExpr), method = "average")
+traitColors = numbers2colors(datTraits, signed = FALSE)
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/Sample_dendrogram_and_trait_heatmap.pdf", width = 12, height = 9)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+plotDendroAndColors(sampleTree2, traitColors,
+		    groupLabels = colnames(datTraits),
+		    marAll = c(1, 8, 3, 1),
+		    cex.rowText = 0.8,
+		    main = "Sample dendrogram and trait heatmap")
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/Sample_dendrogram_and_trait_heatmap.png", width = 1200, height = 900)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+plotDendroAndColors(sampleTree2, traitColors,
+		    groupLabels = colnames(datTraits),
+		    marAll = c(1, 8, 3, 1),
+		    cex.rowText = 0.8,
+		    main = "Sample dendrogram and trait heatmap")
+dev.off()
+##Principal Components Analysis
+pca = prcomp(datExpr)
+sampletype<-rownames(datTraits)
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/PCA_result_2D.pdf", width = 14, height = 9)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+# plot(pca$x[,c(1,2)],pch=16,col=rep(rainbow(nSamples),each=1),cex=1.5,main = "PCA map")
+# text(pca$x[,c(1,2)],row.names(pca$x),col="black",pos=3)
+# legend("topleft",legend=sampletype,
+       # pch=16,cex=1.0,col=rainbow(length(sampletype)),bty="p")
+plot(pca$x[,c(1,2)],pch=c(rep(2,4),rep(18,7),rep(19,7),rep(15,3),rep(4,6),10,rep(17,6),13,11),col=c(rep("red",4),rep("blue",7),rep("turquoise",7),rep("green",3),rep("purple",6),rep("black",1),rep("brown",6),rep("cyan",1),rep("orange",1)),cex=1.5,main = "PCA map")
+legend("topright",legend=sampletype,
+       pch=c(rep(2,4),rep(18,7),rep(19,7),rep(15,3),rep(4,6),10,rep(17,6),13,11),cex=1.0,col=c(rep("red",4),rep("blue",7),rep("turquoise",7),rep("green",3),rep("purple",6),rep("black",1),rep("brown",6),rep("cyan",1),rep("orange",1)))
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/PCA_result_2D.png", width = 1200, height = 900)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+plot(pca$x[,c(1,2)],pch=16,col=rep(rainbow(nSamples),each=1),cex=1.5,main = "PCA map")
+text(pca$x[,c(1,2)],row.names(pca$x),col="black",pos=3)
+legend("topleft",legend=sampletype,
+       pch=16,cex=1.0,col=rainbow(length(sampletype)),bty="p")
+dev.off()
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/PCA_result_3D.pdf", width = 12, height = 9)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+scatterplot3d(pca$x[,1:3], highlight.3d=F, col.axis="black",color = rep(rainbow(nSamples),each=1),cex.symbols=1.5,cex.lab=1.5,cex.axis=1.4,
+             col.grid="lightblue", main="PCA map", pch=16)
+legend("topright",legend = row.names(pca$x) ,pch=16,cex=1.2,col=rainbow(nSamples), ncol = 1) #"bottomright"
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/PCA_result_3D.png", width = 1200, height = 900)
+par(cex = 0.7)
+par(mar = c(1,4,3,1))
+scatterplot3d(pca$x[,1:3], highlight.3d=F, col.axis="black",color = rep(rainbow(nSamples),each=1),cex.symbols=1.5,cex.lab=1.5,cex.axis=1.4,
+             col.grid="lightblue", main="PCA map", pch=16)
+legend("topright",legend = row.names(pca$x) ,pch=16,cex=1.2,col=rainbow(nSamples), ncol = 1) #"bottomright"
+dev.off()
+
+##??ѡpower
+powers = c(1:30)
+sft = pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+soft<--sign(sft$fitIndices[,3])*sft$fitIndices[,2]
+softPower<-0
+maxpower<-0
+power<-0
+for (i in 1:30)
+{
+ if (maxpower<soft[i])
+	{maxpower<-soft[i]
+	 power<-i
+	}
+
+ if (soft[i]>=0.90)
+ {
+  softPower<-i #???????????????
+  maxpower<-soft[i]
+  break
+ }
+}
+if (softPower==0) softPower<-power
+if (maxpower<0.9) 
+{ 
+  softPower<-6
+}
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/softpower_plot.pdf", width = 9, height =5)
+par(mfrow = c(1,2))
+cex1 = 0.9
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n", main = paste("Scale independence"))
+text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],labels=powers,cex=cex1,col="red")
+abline(h=maxpower, col = "red")
+
+plot(sft$fitIndices[,1], sft$fitIndices[,5],xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",main = paste("Mean connectivity"))
+text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
+dev.off()
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/softpower_plotnew.pdf", width = 9, height =5)
+sizeGrWindow(9,5)
+par(mfrow=c(1,2))
+cex1=0.9
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="o", main = paste("Scale independence"),col="red")
+#text(-sign(sft$fitIndices[,3])*sft$fitIndices[,2],cex=cex1,col="red")
+text(11.2,0.86,11,col="red")
+abline(h=0.9, col = "red",lty=2)
+plot(sft$fitIndices[,1], sft$fitIndices[,5],xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="o",main = paste("Mean connectivity"),col="red")
+#text(sft$fitIndices[,5],col="red")
+dev.off()
+
+##????co-expresseion similarity and adjacency
+adjacency = adjacency(datExpr, power = softPower)
+TOM = TOMsimilarity(adjacency) #??adjacencyת????TOM????
+dissTOM = 1-TOM
+##??TOM???????в??ξ???
+geneTree = hclust(as.dist(dissTOM), method = "average") #??????????????????????????
+minModuleSize = 30
+##??dynamic tree cut ????????ģ??????
+dynamicMods = cutreeDynamic(dendro = geneTree, distM = dissTOM, deepSplit = 2, pamRespectsDendro = FALSE, minClusterSize = minModuleSize) #???????
+dynamicColors = labels2colors(dynamicMods)
+##?ϲ?ģ?顣To quantify co-expression similarity of entire modules, we calculate their eigengenes and cluster them on their correlation
+##??????????????eigengenes,????????????ÿ??ģ?飬Ȼ?????????????????????ԣ??????Ըߵ?ģ???ϲ???һ????
+MEList = moduleEigengenes(datExpr, colors = dynamicColors)
+MEs = MEList$eigengenes #???hubgene
+MEDiss = 1-cor(MEs)
+METree = hclust(as.dist(MEDiss), method = "average")
+MEDissThres=0.25
+if(length(METree$order)>=3){
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/module_MEDissThres.pdf", width = 9, height =6)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "") #????hubgene???????????
+abline(h=MEDissThres, col = "red")
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/module_MEDissThres.png", width = 900, height =600)
+plot(METree, main = "Clustering of module eigengenes", xlab = "", sub = "") #????hubgene???????????
+abline(h=MEDissThres, col = "red")
+dev.off()
+}else{print("The module_MEDissThres png not plot.")}
+merge = mergeCloseModules(datExpr, dynamicColors, cutHeight = MEDissThres, verbose = 3) #?????????????????
+##?ϲ???ģ??????ɫ
+mergedColors = merge$colors
+mergedMEs = merge$newMEs
+mergedoldMEs = merge$oldMEs
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/mergedModuleTree.pdf", width = 12, height = 9)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05)
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/mergedModuleTree.png", width = 1200, height = 900)
+plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05)
+dev.off()
+######################################################################
+
+kME=signedKME(datExpr, mergedMEs, outputColumnName = "kME", corFnc = "cor", corOptions = "use = 'p'")
+oldkME=signedKME(datExpr, mergedoldMEs, outputColumnName = "oldkME", corFnc = "cor", corOptions = "use = 'p'")
+person=cor(datExpr,use = 'p')
+
+##???涼???úϲ?֮????ģ??��??????????ģ????ɫ??????????????????????????merge֮????ֵ??
+moduleColors = mergedColors
+MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
+MET = orderMEs(MEs)
+geneModuleMembership = as.data.frame(cor(datExpr, MET, use = "p"));
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
+umc = unique(mergedColors)
+oldumc = unique(dynamicColors)
+lumc = length(umc)
+oldlumc = length(oldumc)
+All_kME=c('#ID','kME','Module')
+All_oldkME=c('#ID','oldkME','Module')
+newAll_kME=c('#ID','kME','Module')
+newP=c('#ID','P-value','Module')
+
+corr<-TOM
+Colors<-mergedColors
+colnames(corr)<-colnames(datExpr)
+rownames(corr)<-colnames(datExpr)
+names(Colors)<-colnames(datExpr)
+colnames(person)<-colnames(datExpr)
+rownames(person)<-colnames(datExpr)
+#nTop = as.integer(readline("choose a maxGeneNumber(30): "))
+thConnect = 0.1
+
+tmpname<-moduleColors
+oldtmpname<-dynamicColors
+names(tmpname)<-colnames(datExpr) 
+names(oldtmpname)<-colnames(datExpr) 
+oldumc=unique(dynamicColors)
+for (i in c(1:oldlumc)){
+  if(oldumc[i]== "grey") {
+    next
+  }
+  filtered_index=oldtmpname[rownames(oldkME)]==oldumc[i]#????modulecolor?????߼?ֵ
+  filtered_index[is.na(filtered_index)] <- FALSE
+  module <-paste('oldkME',oldumc[i],sep="")
+  modulekME<-oldkME[filtered_index,]
+  moduleColor<-dynamicColors[filtered_index]
+  moduleTOM<-TOM[filtered_index,filtered_index]
+  newkME<-modulekME
+  newprobes = rownames(newkME)
+  All_oldkME<-rbind(All_oldkME,cbind(newprobes,newkME[,module],rep(oldumc[i],dim(newkME)[1])))
+  }
+write.table(All_oldkME, sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/All_gene_module_kME-old.txt",row.names=FALSE, col.names=FALSE,quote=FALSE)
+
+
+for (i in c(1:lumc)){
+	if(umc[i]== "grey"){
+		next
+	}
+    ME=MEs[, paste("ME",umc[i], sep="")]
+    pdf(file = paste("C:/Users/Administrator/Desktop/test_WGCNA/Heatmap/",umc[i],"_heatmap.pdf",sep=""), width = 12, height = 9)
+    par(mfrow=c(2,1), mar=c(0.3, 5.5, 3, 2))
+    plotMat(t(scale(datExpr[,moduleColors==umc[i]])),nrgcols=30,rlabels=F,rcols=umc[i], main=umc[i], cex.main=2)
+    par(mar=c(5, 4.2, 0, 0.7))
+    barplot(ME, col=umc[i], main="", cex.main=2,ylab="eigengene expression",xlab="array sample")
+    dev.off()
+    
+    png(file = paste("C:/Users/Administrator/Desktop/test_WGCNA/Heatmap/",umc[i],"_heatmap.png",sep=""), width = 1200, height = 900)
+    par(mfrow=c(2,1), mar=c(0.3, 5.5, 3, 2))
+    plotMat(t(scale(datExpr[,moduleColors==umc[i]])),nrgcols=30,rlabels=F,rcols=umc[i], main=umc[i], cex.main=2)
+    par(mar=c(5, 4.2, 0, 0.7))
+    barplot(ME, col=umc[i], main="", cex.main=2,ylab="eigengene expression",xlab="array sample")
+    dev.off()
+}
+
+
+tmpname<-moduleColors
+names(tmpname)<-colnames(datExpr) 
+
+for (i in c(1:lumc)){
+	if(umc[i]== "") {
+		next
+	}
+	filtered_index=tmpname[rownames(kME)]==umc[i]#????modulecolor?????߼?ֵ
+	filtered_index2=tmpname[rownames(MMPvalue)]==umc[i]#????modulecolor?????߼?ֵ
+	filtered_index[is.na(filtered_index)] <- FALSE
+	filtered_index2[is.na(filtered_index)] <- FALSE
+	module <-paste('kME',umc[i],sep="")
+	moduleP <-paste('ME',umc[i],sep="")
+	modulekME<-kME[filtered_index,]
+	moduleMMPvalue<-MMPvalue[filtered_index2,]
+	moduleColor<-moduleColors[filtered_index]
+	moduleTOM<-TOM[filtered_index,filtered_index]
+	kme<-subset(modulekME,modulekME[,module]>0.7)
+	newkME<-modulekME
+	newMMPvalue<-moduleMMPvalue
+	probes = rownames(kme)
+	newprobes = rownames(newkME)
+	probesP = rownames(newMMPvalue)
+	All_kME<-rbind(All_kME,cbind(probes,kme[,module],rep(umc[i],dim(kme)[1])))
+	newAll_kME<-rbind(newAll_kME,cbind(newprobes,newkME[,module],rep(umc[i],dim(newkME)[1])))
+	newP<-rbind(newP,cbind(probesP,newMMPvalue[,moduleP],rep(umc[i],dim(newMMPvalue)[1])))
+
+
+	write.table(paste(probes, kme[,module], sep = "\t") , file=paste("C:/Users/Administrator/Desktop/test_WGCNA/kME/",module,"_kME.txt",sep=""),row.names=FALSE,col.names=paste('GeneID','kME',sep="\t"), quote=FALSE)
+	inModule =(modulekME[,module]>0.7)
+	if (length(probes)>150) {
+		minkme<-sort(modulekME[,module],decreasing =TRUE)
+		minkme<-minkme[150]
+		kme<-subset(modulekME,modulekME[,module]>=minkme)
+		probes = rownames(kme)
+		inModule =(modulekME[,module]>=minkme)
+	}
+	modProbes = probes
+	modProbe =rownames(modulekME)
+	modTOM = moduleTOM[inModule, inModule]
+	dimnames(modTOM) = list(modProbes, modProbes)
+	vis = exportNetworkToVisANT(modTOM, file = paste("C:/Users/Administrator/Desktop/test_WGCNA/VisANT/VisANTInput-", module, ".txt", sep="") , weighted = TRUE, threshold = thConnect, probeToGene = data.frame(modProbes, modProbes))
+	cyt = exportNetworkToCytoscape(moduleTOM,edgeFile = paste("C:/Users/Administrator/Desktop/test_WGCNA/Cytoscape/CytoscapeInput-edges-", paste(module, collapse="-"), ".txt", sep=""),nodeFile = paste("C:/Users/Administrator/Desktop/test_WGCNA/Cytoscape/CytoscapeInput-nodes-", paste(module, collapse="-"), ".txt", sep=""),weighted = TRUE,threshold = thConnect,nodeNames = modProbe,altNodeNames =modProbe,nodeAttr = moduleColor)	
+}
+
+write.table(All_kME, sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/All_gene_module_kME.txt",row.names=FALSE, col.names=FALSE,quote=FALSE)
+write.table(newAll_kME, sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/All_gene_module_kME-new.txt",row.names=FALSE, col.names=FALSE,quote=FALSE)
+write.table(newP, sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/All_gene_module_kME-newP.txt",row.names=FALSE, col.names=FALSE,quote=FALSE)
+
+
+colorOrder = c("grey", standardColors(50))
+moduleLabels = match(moduleColors, colorOrder)-1
+MEs = mergedMEs
+write.table(paste(colnames(datExpr), moduleColors, sep = "\t"), file="C:/Users/Administrator/Desktop/test_WGCNA/netcolor2gene.xls", row.names=FALSE,col.names=paste('#ID','Module',sep="\t"), quote=FALSE)
+enrich<-as.data.frame(cbind(GeneID=colnames(datExpr),Module=moduleColors))
+for (i in c(1:lumc)){
+	if(umc[i]== ""){
+		next
+	}
+    tmp<-subset(enrich,Module==umc[i])
+    part<-cbind(GeneID=tmp[,1],FDR='-1',regulate='down')
+    write.table(part, file=paste("C:/Users/Administrator/Desktop/test_WGCNA/Enrichment/",umc[i],"_gene.list", sep=""),row.names=FALSE,col.names=TRUE, quote=FALSE,sep="\t")
+}
+
+if (dim(datExpr)[2]>=1500) nSelect=1500 else nSelect=dim(datExpr)[2]
+set.seed(10)
+select = sample(nGenes, size = nSelect)
+selectTOM = dissTOM[select, select]
+selectTree = hclust(as.dist(selectTOM), method = "average")
+selectColors = moduleColors[select]
+plotDiss = selectTOM^7
+diag(plotDiss) = NA
+write.table(paste(colnames(datExpr[select]), moduleColors[select], sep = "\t"), file="C:/Users/Administrator/Desktop/test_WGCNA/select_netcolor2gene.xls", row.names=FALSE, col.names=paste('GeneID','Module',sep="\t"),quote=FALSE)
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/networkHeatmap.pdf", width = 15, height = 15)
+TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot")
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/networkHeatmap.png", width = 1500, height = 1500)
+TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot")
+dev.off()
+### ??ѡÿ??ģ????????????
+MEs = moduleEigengenes(datExpr, moduleColors)$eigengenes
+MET = orderMEs(MEs)
+
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/hubGeneHeatmap.pdf", width = 6, height = 6)
+plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2), plotDendrograms = FALSE, xLabelsAngle = 90)
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/hubGeneHeatmap.png", width = 600, height = 600)
+plotEigengeneNetworks(MET, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2), plotDendrograms = T, xLabelsAngle = 90)
+dev.off()
+### ????????????????״֮????????ϵ????p-value
+##??????????֯?????Կ??ӻ?
+moduleTraitCor = cor(MET, datTraits, use = "p")
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples)
+write.table(as.data.frame(t(moduleTraitCor)), sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/moduleTraitCorrelation.txt")
+write.table(as.data.frame(t(moduleTraitPvalue)), sep = "\t", file="C:/Users/Administrator/Desktop/test_WGCNA/moduleTraitPvalue.txt")
+##??????????֯?????Կ??ӻ?
+aa<-nrow(moduleTraitCor)
+aa<-dim(moduleTraitCor)[1]
+textMatrix = paste(signif(moduleTraitCor, 2), "\n(",signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) = dim(moduleTraitCor)
+
+# labeledHeatmap(Matrix = moduleTraitCor[-14,],
+# 	       xLabels = colnames(datTraits),
+# 	       yLabels = names(MET[,-14]),
+# 	       ySymbols = names(MET[,-14]),
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/Module-Trait_Correlation.pdf", width = 10, height = 6)
+par(mar = c(6, 10, 2, 1.5))
+labeledHeatmap(Matrix = moduleTraitCor[-aa,],
+	       xLabels = colnames(datTraits),
+	       yLabels = names(MET[,-aa]),
+	       ySymbols = names(MET[,-aa]),
+	       colorLabels = FALSE,
+	       colors = blueWhiteRed(100),#colorRampPalette(c("green","black","red"))(100),
+	       textMatrix = textMatrix[-aa,],
+	       setStdMargins = FALSE,
+	       cex.text = 0.45,
+	       zlim = c(-1,1),
+	       yColorWidth=0.02,
+	       xColorWidth = 0.05,
+	       main = paste("Module-trait relationships"))
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/Module-Trait_Correlation.png", width = 1000, height = 600)
+par(mar = c(6, 10, 2, 1.5))
+labeledHeatmap(Matrix = moduleTraitCor,
+	       xLabels = colnames(datTraits),
+	       yLabels = names(MET),
+	       ySymbols = names(MET),
+	       colorLabels = FALSE,
+	       colors = blueWhiteRed(100),#colorRampPalette(c("green","black","red"))(100),
+	       textMatrix = textMatrix,
+	       setStdMargins = FALSE,
+	       cex.text = 0.45,
+	       zlim = c(-1,1),
+	       yColorWidth=0.02,
+	       xColorWidth = 0.05,
+	       main = paste("Module-trait relationships"))
+dev.off()
+
+geneTraitSignificance = as.data.frame(cor(datExpr, datTraits, use = "p"))
+geneTraitColor=as.data.frame(numbers2colors(geneTraitSignificance,signed=TRUE,colors = colorRampPalette(c("blue","white","red"))(100)))
+names(geneTraitColor)= colnames(datTraits)
+pdf(file = "C:/Users/Administrator/Desktop/test_WGCNA/gene_dendrogram_with_trait.pdf", width = 6, height = 6)
+par(mar = c(3.5, 7, 2, 1))
+plotDendroAndColors(geneTree, cbind(mergedColors, geneTraitColor),
+	    c("Module",colnames(datTraits)),dendroLabels = FALSE, hang = 0.03,
+	    addGuide = TRUE, guideHang = 0.05)
+dev.off()
+png(file = "C:/Users/Administrator/Desktop/test_WGCNA/gene_dendrogram_with_trait.png", width = 600, height =600)
+par(mar = c(3.5, 7, 2, 1))
+plotDendroAndColors(geneTree, cbind(mergedColors, geneTraitColor),
+	    c("Module",colnames(datTraits)),dendroLabels = FALSE, hang = 0.03,
+	    addGuide = TRUE, guideHang = 0.05)
+dev.off()
+
+geneTraitSignificance = as.data.frame(cor(datExpr, datTraits, use = "p"))
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples))
+names(geneTraitSignificance) = paste("GS.", colnames(datTraits), sep="")
+names(GSPvalue) = paste("GS.", colnames(datTraits), sep="")
+modNames = substring(names(MET), 3)
+# Interesting module colors
+for (module in modNames)
+{
+  if(module== ""){
+       next
+  }
+  column = match(module, modNames); # col number of interesting modules
+  moduleGenes = moduleColors==module;
+  pdf(file = paste("C:/Users/Administrator/Desktop/test_WGCNA/Gene_significance/",module,"_Module_membership_vs_gene_significance.pdf",sep=""), width = 7, height = 7)
+  par(mfrow = c(1,1))
+  verboseScatterplot(abs(kME[moduleGenes, column]),
+	     abs(geneTraitSignificance[moduleGenes, 1]),
+	     xlab = paste("Module Membership in", module, "module"),
+	     ylab = "Gene significance",
+	     main = paste("Module membership vs. gene significance
+"),
+	     cex.main = 1.2, cex.lab = 1.2, pch=19,cex.axis = 1.2, col = module)
+  dev.off()
+  png(file = paste("C:/Users/Administrator/Desktop/test_WGCNA/Gene_significance/",module,"_Module_membership_vs_gene_significance.png",sep=""), width = 700, height = 700)
+  par(mfrow = c(1,1))
+  verboseScatterplot(abs(kME[moduleGenes, column]),
+	     abs(geneTraitSignificance[moduleGenes, 1]),
+	     xlab = paste("Module Membership in", module, "module"),
+	     ylab = "Gene significance",
+	     main = paste("Module membership vs. gene significance"),
+	     cex.main = 1.2, cex.lab = 1.2, pch=19,cex.axis = 1.2, col = module)
+  dev.off()
+}
+parameter<-c(1,0.5,'Unsigned','Dynamic Hybrid Tree Cut algorithm',softPower,minModuleSize,MEDissThres)
+names(parameter)<-c('FPKM:>=','variation of FPKM : cv>=','Weighted Network:','Hierarchal clustering tree:','Power :',"minimum module size:","minimum height for merging modules :")
+write.table(parameter, file="C:/Users/Administrator/Desktop/test_WGCNA/parameter.txt", col.names=FALSE,sep=" ",quote=FALSE)
+
