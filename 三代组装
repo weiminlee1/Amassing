@@ -1,0 +1,35 @@
+第一步：原始数据中的reads相互比对，找到序列之间的Overlap。
+minimap2 -t 10 -x ava-ont ont.fq ont.fq > gzip -1 ont.paf.gz
+$minimap -Sw5 -L100 -m0 -t8 ont.fastq ont.fastq | gzip -1 > ont.paf.gz
+
+第二步：找到Overlap就能够进行组装了。
+miniasm -f ont.fastq ont.paf.gz > ONTmin.gfa
+
+GFA格式转换成FASTA格式
+awk '/^S/{print ">""\n"}' ONTmin.gfa | fold > ONTmin_IT0.fasta
+
+第三步： 原始的组装结果充满了错误，所以需要进行纠错。
+纠错分为两种，一种是用三代自身数据，一种是用二代数据进行纠错。当然这两步都是需要的
+
+首先使用三代数据进行纠错，一般迭代个三次就差不多。
+minimap ONTmin_IT0.fasta ont.fastq > ONTmin_IT0.paf
+racon -t 4 ont.fastq ONTmin_IT0.paf ONTmin_IT0.fasta ONTmin_IT1.fasta
+
+minimap ONTmin_IT1.fasta ont.fastq > ONTmin_IT1.paf
+racon -t 4 ont.fastq ONTmin_IT1.paf ONTmin_IT1.fasta ONTmin_IT2.fasta
+
+minimap ONTmin_IT2.fasta ont.fastq > ONTmin_IT2.paf
+racon -t 4 ont.fastq ONTmin_IT2.paf ONTmin_IT2.fasta ONTmin_IT3.fasta
+
+使用二代数据进行纠错，推荐用30X PCR free的illuminia 测序数据
+
+Step 1: 数据预处理，过滤低质量短读，去接头。工具很多，常用的是trimmomatic，cutadapter. 
+平均质量高于Q30，对5‘端进行低质量碱基删除，保留大于100bp的短读
+fastp -q 30 -5 -l 100 -i il_1.fq.gz -I il_2.fq.gz -o i1_clean_1.fq -O i1_clean_2.fq
+
+Step2:  比对，这一步基本都只用了bwa了
+bwa index ONTmin_IT3.fasta
+bwa mem -t 8 ONTmin_IT3.fasta il_clean_1.fq il_clean_2.fq | samtools view -@ 8 -bhS | samtools sort -@ 8 > ONTmin_IT3.bam
+
+step3: 使用比对后的BAM文件进行纠错
+java -Xmx16G -jar pilon-1.22.jar --genome ONTmin_IT3.fasta --frags ONTmin_IT3.bam --fix snps --output ONTmin_IT4
