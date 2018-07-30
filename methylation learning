@@ -1,0 +1,32 @@
+WGBS（Whole-genome bisulfite sequencing）被视为甲基化测序的“金标准”。（亚硫酸盐定序）
+其原理是用Bisulfite处理，将基因组中未发生甲基化的C碱基转换成U，进行PCR扩增后变成T，
+与原本具有甲基化修饰的C碱基区分开来，再结合高通量测序技术，与参考序列比对，即可判断CpG/CHG/CHH位点是否发生甲基化，
+特别适用于绘制单碱基分辨率的全基因组DNA甲基化图谱。
+
+DNA甲基化：DNA化学修饰的一种形式，能做不改变DNA序列的前提下，改变遗传表现。DNA甲基化过程会使甲基添加到DNA分子上，
+例如在胞嘧啶环的5’碳上：这种5’方向的DNA甲基化方式可见于所有脊椎动物。
+
+DNA甲基化可能使基因沉默化，进而使其失去功能。此外，也有一些生物体内不存在DNA甲基化作用
+虽然CpG序列出现的频率并不高，但是在某些基因区域内，CpG的密度很高，俗称CpG岛。
+这些CpG岛大多出现在基因的启动子区域（人类占到70%），长度达300-3000bp。
+目前的研究表明，大多数的管家基因都含有CpG岛，位于基因的5’端（其中的大多数CpG岛都是未甲基化的）
+
+<b>数据处理（使用Bismark软件处理）</b>
+
+1 index文件构建
+bismark_genome_preparation --path_to_bowtie path_bowtie --verbose genome_interested
+
+2 比对
+bismark --genome genome_interested -1 read1.fastq.gz -2 read2.fastq.gz -p 4 -o result_out
+bismark --genome genome_interested test_data.fastq -p 4 -o result_out 2>test.log
+
+3 甲基化位点提取
+bismark_methylation_extractor -s --gzip --bedGraph --buffer_size 10G --cytosine_report --comprehensive
+ --genome_folder genome_interested test_data_bismark_bt2.bam 2>extractor.log
+ 
+ 4 生成处理报告
+ bismark2report
+ 
+ 5 结果解读
+  --cytosine_report
+  
