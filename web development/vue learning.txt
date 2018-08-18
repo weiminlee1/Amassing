@@ -6,11 +6,11 @@ npm install vue -g
 npm install vue-router -g
 npm install vue-cli -g
 
-npm install
-2，进入项目目录 cd vue
+npm install 安装依赖包
+2，进入项目目录 cd 项目名称（qinlab）
 3，安装依赖包 npm install
 报错：1：npm版本太低（npm install npm -g）-g 加载到全局变量；
-2：项目上的包版本不兼容，删除项目里的node module；
+2：项目上的包版本不兼容，删除项目里的node module；（npm install packagename@version 安装指定的包到node modules这个目录）
 3：改变package.json里面各种包的版本信息，比如vue, node, npm...
 4, 运行项目 npm run dev
 备注：如果localhost8080页面打不开，更改项目里的config下的index.js文件里的：autoOpenBrowser:true
