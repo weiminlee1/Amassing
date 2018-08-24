@@ -1,0 +1,68 @@
+OrthoFinder is a fast, accurate and comprehensive analysis tool for comparative genomics. 
+It finds orthologues and orthogroups infers ##rooted gene trees## for all orthogroups and 
+infers a ##rooted species tree## for the species being analysed. OrthoFinder also
+provides comprehensive statistics for comparative genomic analyses.
+OrthoFinder is simple to use and all you need to run 
+it is a set of protein sequence files (one per species) in FASTA format.
+
+依赖的模块
+blast+
+mcl
+FastME conda install fastme
+
+运行OrthoFinder
+inputfolder: contains your protein sequences, like species1_pro.fasta, species2_pro.fast...
+orthofinder -f inputfolder
+
+个性化分析
+Performing a complete OrthoFinder analysis is simple:
+
+1，Download the amino acid sequences, in FASTA format, for the species you want to analyse. 
+If you have the option, it is best to use a version containing a single representative/longest 
+transcript-variant for each gene.
+
+2，Optionally, you may want to rename the files to something simple since the filenames 
+will be used as species identifiers in the results. E.g if you were 
+using the 'Homo_sapiens.GRCh38.pep.all.fa' file you could rename it to 'Homo_sapiens.fa' or 'Human.fa'.,
+
+3，Place the FASTA files all in a single directory.
+
+4，To perform a complete OrthoFinder analysis requires just one command: 
+orthofinder -f fasta_files_directory [-t number_of_threads]
+The argument 'number_of_threads' is an optional argument to specify the number 
+of parallel threads to use for the BLAST searches
+
+结果分析
+1：Orthogroups 直系同源基因组
+1.1 Orthogroups.csv is a tab separated text file. Each row contains 
+the genes belonging to a single orthogroup. 
+The genes from each orthogroup are organized into columns, one per species.
+每行多代表一个直系同源组，每一行中的每列代表不同物种的基因
+
+1.2 Orthogroups_UnassignedGenes.csv is a tab separated text file that is 
+identical in format to Orthogroups.csv but contains all of the genes
+that were not assigned to any orthogroup.
+包含不属于直系同源组的剩余基因
+
+1.3 Orthogroups.txt (legacy format) is a second file containing the orthogroups 
+described in the Orthogroups.csv file but using the OrthoMCL output format.
+以orthomcl的输出格式输出直系同源基因组
+
+
+Results Files: Orthogroup Statistics
+The statistics calculated from the orthogroup analysis provide the basis for any comparative genomics analysis. They are easily plotted and can also be used for quality control.
+
+1 Statistics_Overall.csv is a tab separated text file giving useful statistics from the orthogroup analysis.
+
+2 Statistics_PerSpecies.csv is a tab separated text file giving many of the same statistics as the 'Statistics_Overall.csv' file but on a species-by-species basis.
+
+3 Orthogroups_SpeciesOverlaps.csv is a tab separated text file containing a matrix of the number of orthogroups shared by each species-pair (i.e. the number of orthogroups which contain at least one gene from each of the species-pairs).
+
+Most of the terms in the files 'Statistics_Overall.csv' and 'Statistics_PerSpecies.csv' are self-explanatory, the remainder are defined below.
+
+1.1 Species-specific orthogroup: An orthogroups that consist entirely of genes from one species.
+1.2 G50: The number of genes in the orthogroup such that 50% of genes are in orthogroups of that size or larger.
+1.3 O50: The smallest number of orthogroups such that 50% of genes are in orthogroups of that size or larger.
+1.4 Single-copy orthogroup: An orthogroup with exactly one gene (and no more) from each species. These orthogroups are ideal for inferring a species tree and many other analyses.
+1.5 Unassigned gene: A gene that has not been put into an orthogroup with any other genes.
+
