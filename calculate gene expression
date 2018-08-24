@@ -1,0 +1,49 @@
+1 hisat2  stringtie ballgown
+#!/bin/sh
+#PBS -l nodes=2:ppn=10
+#PBS -o /share/Public/stu_huiyanan/Lweimin/data/flower/log/pbs_out.$PBS_JOBID
+#PBS -e /share/Public/stu_huiyanan/Lweimin/data/flower/log/pbs_err.$PBS_JOBID
+#PBS -l walltime=72:00:00
+#PBS -q batch
+
+cd /share/Public/stu_huiyanan/Lweimin/data/flower
+data_dir=/share/Public/stu_huiyanan/Lweimin/data/flower
+genome=/share/Public/stu_huiyanan/Lweimin/assmble/genome
+index=/share/Public/stu_huiyanan/Lweimin/assmble/genome/index
+#dir_sra_list=/share/workplace/home/stu_huiyanan/lincRNA_Soybean/data_download
+#hisat2-build $genome/Sg.HiCasm20180705.asm.fasta $index/Sg_tran
+cat flower_file_path.txt| while read line
+do   
+    mkdir $line
+    hisat2 -p 20 --dta -x $index/Sg_tran  --min-intronlen 20 --max-intronlen 2000 -1 ${data_dir}/${line}_R1.fq.gz -2 ${data_dir}/${line}_R2.fq.gz -S ${data_dir}/${line}/${line}.sam
+    samtools sort -@ 20 -o ${data_dir}/${line}/${line}.bam  ${data_dir}/${line}/${line}.sam
+    rm  ./${line}/*.sam
+    #stringtie -p 20 -G ${genome}/soybean.gtf -o  ${data_dir}/${line}/${line}.gtf -l  ${line}  ${data_dir}/${line}/${line}.bam
+done
+#cd $data_dir
+#find -name *.gtf>mergelist.txt
+#stringtie --merge -F 0.5 -T 0.5 -p 20 -G $genome/soybean.gff3 -o stringtie_merged.gtf ./mergelist.txt
+#gffcompare -r $genome/pineapple.gtf -G -o merged stringtie_merged.gtf
+#date
+
+2 rsem
+#!/bin/sh
+#PBS -l nodes=2:ppn=10
+#PBS -o /share/Public/stu_huiyanan/Lweimin/data/flower/rsem_log/pbs_out.$PBS_JOBID
+#PBS -e /share/Public/stu_huiyanan/Lweimin/data/flower/rsem_log/pbs_err.$PBS_JOBID
+#PBS -l walltime=72:00:00
+#PBS -q batch
+
+cd /share/Public/stu_huiyanan/Lweimin/data/flower
+data_dir=/share/Public/stu_huiyanan/Lweimin/data/flower
+cds=/share/Public/stu_huiyanan/Lweimin/assmble/cds
+index=/share/Public/stu_huiyanan/Lweimin/assmble/cds/index
+cds_out=/share/Public/stu_huiyanan/Lweimin/data/flower/cds_out
+#dir_sra_list=/share/workplace/home/stu_huiyanan/lincRNA_Soybean/data_download
+#hisat2-build $genome/Sg.HiCasm20180705.asm.fasta $index/Sg_tran
+rsem-prepare-reference --bowtie2 $cds/Sg.annoV20180705.cds.fasta $index/Sg_cds
+cat flower_file_path.txt| while read line
+do   
+    mkdir $cds_out/$line
+    rsem-calculate-expression -p 20 --paired-end --bowtie2 --append-names ${data_dir}/${line}_R1.fq.gz ${data_dir}/${line}_R2.fq.gz $index/Sg_cds $cds_out/$line
+done
