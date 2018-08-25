@@ -1,0 +1,25 @@
+16182999 reads; of these:
+16182999 (100.00%) were paired; of these:
+5731231 (35.42%) aligned concordantly 0 times
+4522376 (27.95%) aligned concordantly exactly 1 time
+5929392 (36.64%) aligned concordantly >1 times
+----
+5731231 pairs aligned concordantly 0 times; of these:
+2381431 (41.55%) aligned discordantly 1 time
+----
+3349800 pairs aligned 0 times concordantly or discordantly; of these:
+6699600 mates make up the pairs; of these:
+3814736 (56.94%) aligned 0 times
+1883429 (28.11%) aligned exactly 1 time
+1001435 (14.95%) aligned >1 times
+88.21% overall alignment rate
+
+the Bowtie2 result summary is divided in 3 sections:
+Concordant alignment - In your data (4522376 + 5929392) reads align concordantly. Which is 64.59% of reads
+Discordant alignment - So now 5731231 reads remain which is 35.41% (100-64.59). Of these, 2381431 reads align discordantly. That is to say, of the non-concordant fraction, 41.55% of reads (2381431 reads) align discordantly.
+The rest - Now, remember that alignment whether concord. or discord., but both are aligned in paired-end mode. The rest of the reads either align as singles (i.e. Read1 in one locus & Read2 in completely different locus or one mate aligned and the other unaligned) or may not align at all. So the reads that are in this section is Total -(Concord.+Discord.). That is 16182999 -(10451768+2381431) = 3349800 reads.
+Since alignment, if any, here is in single fashion so we calculate in mates (readsx2).
+
+Now to reach the overall alignment, count the mates in total (i.e. mates aligned in paired and mates aligned in single fashion). That would be -
+(10451768 x2)+(2381431 x2)+1883429+1001435 = 28551262 mates
+That is 28551262 mates aligned of total (16182999 x2) mates, which is 88.21%.
