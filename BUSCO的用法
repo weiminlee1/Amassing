@@ -1,0 +1,119 @@
+BUSCO 
+completeness assessments employ sets of Benchmarking Universal Single-Copy
+Orthologs from OrthoDB (www.orthodb.org) to provide quantitative measures of the
+completeness of genome assemblies, annotated gene sets, and transcriptomes in terms of
+expected gene content. Genes that make up the BUSCO sets for each major lineage are
+selected from orthologous groups with genes present as single-copy orthologs in at least 90% of
+the species. While allowing for rare gene duplications or losses, this establishes an
+evolutionarily-informed expectation that these genes should be found as single-copy orthologs
+in any newly-sequenced genome. The evolutionary expectation means that if the BUSCOs
+cannot be identified in a genome assembly or annotated gene set, it is possible that the
+sequencing and/or assembly and/or annotation approaches have failed to capture the complete
+expected gene content.
+
+BUSCO是用来评估组装好的基因组，转录组，蛋白组的完整性。依据是busco构建某个界已有基因组物种的单拷贝基因群，即
+某个基因在某个物种里只有一个拷贝，但同时在其他90%物种里的同源基因也只有一个拷贝：
+来推测新组装好的基因组应该也存在这样的单拷贝基因，如果新物种里没有这样的单拷贝基因群，说明测序，组装，或者注释方法
+未能捕获到期待的基因丰度。
+
+安装方法：
+
+下载BUSCO的安装包
+下载BUSCO所需要的依赖软件
+NCBI BLAST+
+HMMER
+Augustus
+
+Augustus (> 3.2.1) (only used for assessing genomes)
+http://bioinf.uni-greifswald.de/augustus/
+Augustus uses several executables and PERL scripts. Please refer to Augustus
+documentation for PERL requirements.
+In addition to the entries in the config.ini file, Augustus requires environment
+variables to be declared as follows:
+export PATH="/path/to/AUGUSTUS/augustus-3.2.3/bin:$PATH"
+export PATH="/path/to/AUGUSTUS/augustus-3.2.3/scripts:$PATH"
+export AUGUSTUS_CONFIG_PATH="/path/to/AUGUSTUS/augustus-3.2.3/config/"
+
+解压后
+python setup.py install --user
+在config文件夹下
+cp config.ini.default config.ini
+修改config.ini里面依赖包的路径
+
+下载单拷贝基因数据库：https://busco.ezlab.org/
+# Eukaryota
+wget http://busco.ezlab.org/v2/datasets/eukaryota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/fungi_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/microsporidia_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/dikarya_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/ascomycota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/pezizomycotina_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/eurotiomycetes_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/sordariomyceta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/saccharomyceta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/saccharomycetales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/basidiomycota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/metazoa_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/nematoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/arthropoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/insecta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/endopterygota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/hymenoptera_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/diptera_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/vertebrata_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/actinopterygii_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/tetrapoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/aves_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/mammalia_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/euarchontoglires_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/laurasiatheria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/embryophyta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/protists_ensembl.tar.gz
+wget http://busco.ezlab.org/v2/datasets/alveolata_stramenophiles_ensembl.tar.gz
+把数据库解压
+
+运行命令
+
+python run_BUSCO.py -i 组装好的新基因组序列.fasta -o 输出文件夹名字 -l 数据库文件夹名字 -m geno -sp arabidopsis ## -m表示模式：是基因组还是
+转录组，蛋白组；-sp 指定物种
+
+
+1- Main results files
+1.1 short_summary_XXXX.txt
+Contains a plain text summary of the results in BUSCO notation.
+Also gives a brief breakdown of the metrics.
+1.2 full_table_XXXX.tsv
+Contains the complete results in a tabular format with scores and lengths of
+BUSCO matches, and coordinates (for genome mode) or gene/protein IDs
+(for transcriptome or proteins mode).
+1.3 missing_buscos_list_XXXX.tsv
+Contains a list of missing BUSCOs.
+
+1.4 single_copy_busco_sequences (genome mode only)
+FASTA format file for each complete single-copy BUSCO identified.
+.faa files contain protein sequences
+.fna files contain co
+
+作图
+python scripts/generate_plot.py –wd SUMMARIES_FOLDER
+1 - Mandatory argument:
+-wd PATH/NAME, --working_directory PATH/NAME
+Name or full path to folder containing BUSCO short_summary files.
+2 - Optional arguments:
+--no_r To avoid running R. It will just create the R script file in the working
+directory
+-q, --quiet Disable the info logs, displays only errors
+-v, --version Show this version and exit
+-h, --help Show this help message and exit
+
+
+
+
+Example scripts/generate_plot.py bar chart:
+mkdir my_summaries
+cp run_SPEC1/short_summary_SPEC1.txt my_summaries/.
+cp run_SPEC2/short_summary_SPEC2.txt my_summaries/.
+cp run_SPEC3/short_summary_SPEC3.txt my_summaries/.
+cp run_SPEC4/short_summary_SPEC4.txt my_summaries/.
+cp run_SPEC5/short_summary_SPEC5.txt my_summaries/.
+python scripts/generate_plot.py –wd my_summaries
