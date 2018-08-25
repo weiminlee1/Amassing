@@ -1,18 +1,20 @@
-16182999 reads; of these:
+16182999 reads; of these: 总reads等于16182999*2
 16182999 (100.00%) were paired; of these:
-5731231 (35.42%) aligned concordantly 0 times
-4522376 (27.95%) aligned concordantly exactly 1 time
-5929392 (36.64%) aligned concordantly >1 times
+5731231 (35.42%) aligned concordantly 0 times ##没有合理比对上的，方向上和距离范围
+4522376 (27.95%) aligned concordantly exactly 1 time ##合理比对上的（双端模式）
+5929392 (36.64%) aligned concordantly >1 times ##合理比对上多次的（双端模式）
 ----
 5731231 pairs aligned concordantly 0 times; of these:
-2381431 (41.55%) aligned discordantly 1 time
+2381431 (41.55%) aligned discordantly 1 time ##双端模式比对不合理的
 ----
 3349800 pairs aligned 0 times concordantly or discordantly; of these:
-6699600 mates make up the pairs; of these:
-3814736 (56.94%) aligned 0 times
-1883429 (28.11%) aligned exactly 1 time
-1001435 (14.95%) aligned >1 times
+6699600 mates make up the pairs; of these: ##6699600=（3349800*2）
+3814736 (56.94%) aligned 0 times ##没有比对上的read数量
+1883429 (28.11%) aligned exactly 1 time ##比对上一次的read数量
+1001435 (14.95%) aligned >1 times ##比对上多于一次的read数量
 88.21% overall alignment rate
+
+比对率=100-[（16182999*2）-3814736]*100
 
 the Bowtie2 result summary is divided in 3 sections:
 Concordant alignment - In your data (4522376 + 5929392) reads align concordantly. Which is 64.59% of reads
