@@ -1,4 +1,6 @@
 fastp是一款较新的数据质控软件，接触这个软件也是由于目前市场的软件各有功能但是功能都不是很全，譬如最近接触到一个RNAseq数据，质量较差，需要去除接头而且含N较多，序列起始端的数据较差需要去除几个bp，本来是打算使用trimmomatic去除接头和起始几个bp+cutadapt去除含N多的序列，但觉得稍微复杂。下面我们看看fastp能做什么。
+安装方法
+conda install -c bioconda fastp
 
     fastp的特性：
 
