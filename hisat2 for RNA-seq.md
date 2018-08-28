@@ -136,3 +136,8 @@ stringtie 参数详解
 -i  合并后，保留含retained introns的转录本 (默认值: 除非有强有力的证据，否则不予保留)
 -l <label>  输出转录本的名称前缀 (默认值: MSTRG)
 
+gffcompare
+The program gffcompare can be used to compare, merge, annotate and estimate accuracy of one or more GFF files (the “query” files), when compared with a reference annotation (also provided as GFF). 
+当一个或多个GFF文件与参考注释文件进行比较，merge，注释和评估精确性时，用gffcompare来完成
+    gffcompare [options]* {-i <input_gtf_list> | <input1.gtf> [<input2.gtf> .. <inputN.gtf>]}
+ 
