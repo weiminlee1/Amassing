@@ -1,0 +1,90 @@
+以下内容参考：https://baijiahao.baidu.com/s?id=1577425474036936057&wfr=spider&for=pc
+宏基因组(metagenomics)，一个环境（一个样品）中的全部微生物的基因组信息，以获得群落中全部的物种信息和功能信息。
+
+问题：每一个自然环境样品中，都存在着几百甚至几千个物种，每个物种在环境样品中的丰度又有很大差异，
+它们的基因组信息混在一起，我们如何有效的区分，并获得每个菌株的信息？
+
+Binning 分析：
+含义是分箱、聚类指从微生物群体序列中将不同个体的序列（reads或contigs等）分离开来的过程。----把宏基因组数据
+中来自同一菌株的序列聚到一起，得到一个菌株的基因组。
+
+Binning 分析应用：
+1）关联分析
+通过Binning得到的bins（strain-levelclusters）可以进行宏基因组关联分析以及多组学分析，将特定功能代谢产物与特定
+物种、特定基因进行关联研究。
+
+2）单菌组装
+通过bins进行后续组装，可以得到很多不能在实验室里培养的细菌、古菌、病毒的基因组草图，然后根据单菌组装结果进行菌株水平
+的基因和功能注释、比较基因组分析、进化分析等。以获得这些菌株的生态适应机制、营养互作机制、新陈代谢功能等。
+可以研究在生态环境和复杂疾病中起重要作用的菌种以及致病菌和宿主的互作机制及其微进化机制
+
+Binning 分析？同一菌株的序列如何聚到一起？
+1）Binning的依据最初是来自同一菌株的序列，其核酸组成是相似的，于是可以根据核酸组成信息来进行binning，例如根据核酸使用
+频率，通常是四核苷酸频率，GC含量和必需的单拷贝基因等。利用核酸组成信息进行binning，基本上只适合那些群落中物种基因型
+有明显核酸组成差异的。
+2）研究发现来自同一个菌株的基因在不同的样品中的丰度分布模式是相似的，因此可以根据丰度信息来进行binning，即在不同样品
+中的丰度变化模式，这种方法更有普适性，一般效果也比较好，能达到菌株的水平。
+条件：必须要大样本量，一般至少50个样本以上，至少要有2个组能呈现丰度变化，每个组内的生物学重复也要尽量的多。
+<还可以同时依据核酸组成和丰度变化信息，将核酸组成信息和丰度差异信息创建一个综合的距离矩阵，既能保证binning效果，
+也能相对节约计算资源，现在比较主流的binning软件多是同时依据核酸组成和丰度变化信息。>
+
+Bingning 技术原理：
+根据基于聚类的序列类型的不同，暂且分为reads binning，contig binning和genes binning。
+1）由于核酸组成和物种丰度变化模式在越长的序列中越显著和稳定，基于conting binning效果可能更好，现在很多软件也是基于
+contig binning。
+基于reads binning的优势是可以聚类出宏基因组中丰度非常低的物种，考虑到在宏基因组组装中reads利用率很低，单样品5Gb测序量情况下，
+环境样品组装reads利用率一般只有10%左右，肠道样品或极端环境样品组装reads利用率一般能达到30%，这样很多物种，尤其是低丰度的物种可能没有被组装出来，
+没有体现在gene 或者contig 中，因此基于reads binning 才有可能得到低丰度的物种。
+一篇基于reads binning 的LSA方法的文章称，可以聚类出丰度低到0.00001%的物种，并且对同一物种中的不同菌株的敏感性很强【DOI:10.1038/nbt.3329.】
+
+2）基于genes binning的应用非常广泛，目前已发表的宏基因组关联分析（MWAS）和多组学联合分析文章中，宏基因组binning很多都用genes binning方法，
+尤其是疾病的MWAS研究中基本都用genes binning，原因可能是基于genes丰度变化模式进行binning可操作性比较强，宏基因组分析中肯定都会计算gene丰度，
+一般不会计算contig丰度，gene丰度数据可以信手拈来，同时基于genes binning有很多可参考的文献，过程也并不复杂，可复制性强，也有一定的马太效应吧，
+还有就是对计算机资源消耗比较低
+ 
+应用：
+Genes binning方法一般是在宏基因组做完组装和基因预测之后，把所有样品中预测到的基因混合在一起，去冗余得到unique genes集合，
+对这个unique genes集合进行binning，主要是根据gene在各个样品中的丰度变化模式，计算gene之间的相关性，利用这种相关性进行聚类
+根据具体的聚类算法和相关性系数的不同，对binning得到的bins的叫法也不同，主要有metagenomic linkage groups ( MLG ), 
+metagenomic clusters ( MGC )， metagenomic species ( MGS )，和 metagenomic operational taxonomic units ( MetaOTUs )，
+同时，MLG, MGC, MGS和MetaOTUs物种注释的标准也是不一样的 （PMID:17616613 文献）
+
+常用于组装单菌的Contig binning：文献PMID:26951112
+软件推荐：CONCOCT软件 ( Clustering cONtigs with COverage and ComposiTion ，软件下载地址：https://github.com/BinPro/CONCOCT)
+
+Binning 评估：
+通过Binning得到很多bins后，如何知道这些bins的质量呢？其完整度，纯度如何？是否存在chimeric genome bins（bins中的序列来自两个及两个以
+上的菌株）。因此bins评估也是很重要的一步。一般是根据编码主要代谢过程的单拷贝基因或者核心保守基因来评估和量化完整度，
+细菌就有推荐的31个单拷贝基因集合。
+
+现在binning评估方面也有相应的软件，这里推荐CheckM软件 ( 下载地址: http://ecogenomics.github.io/CheckM/ ) 【PMID: 25977477】，
+该软件的评估结果会给出completeness和contamination两个指标。同时也可以结合常用来检验样品污染的GC-Depth分布图来看是否存在污染，
+是否是chimeric genome bins。
+
+这里如果发现通过binning得到的bins很少，或者高质量的bins很少，原因可能是样品内物种复杂度太高，或者样品内物种丰度变化模式不明显，
+或者是宏基因组组装效果不好。
+
+Bins很少怎么办？在上面提到的原因中，我们主要可以把控两点：
+1）样品内物种丰度变化模式，可以通过加大样品量、增加重复设置等试验设计来提高。
+2）组装效果，对于宏基因组组装效果，尤其是contig的准确性，可以在binning前做一个contig的嵌合体校正，
+避免一条contig含有两种不同来源的序列，可以根据mapping结果对有coverage分布差异的contig进行切分，
+这样消除嵌合体contig，避免对后续binning的影响。
+
+Binning 后续组装：
+通过binning得到bins，对bins进行评估，筛选得到好的bins后就可以进行后续的基因组组装了。
+值得注意的是基于genes binning得到的bins进行后续的组装，一般也是基于contigs进行reads mapping的，即genes来源的contigs。
+也就是在后续的单菌组装上genes binning 和 contig binning 殊途同归。
+1）组装
+将各个样品的双端clean reads分别比对到该bin所包含的contigs上，计算每个样品map上的比例，选取map率高的前几个样品map上的reads分别进行组装，
+同时也可以将map率高的这几个样品map上的reads混合在一起进行组装，然后看哪个组装效果好就选哪个做为最终的组装结果。选map率高的样品中map上的reads进行组装，
+是考虑到该bin在该样品中丰度高，测序深度高，测序完整性可能好，组装效果可能会好。
+对于组装软件，常用的组装软件SOAPdenovo，Velvet，Ray和ABySS 等都可以，不过基于binning得到的bins进行组装，序列深度可能会比较低，可以选用适用于低深度测序的组装软件，
+比如Spades软件【PMID:22506599】。
+
+2）组装效果评估
+对bins重新组装得到的基因组草图，也可以进行基因组完整度的评估，当然也可以用CheckM和GC-Depth分布图。
+
+3）物种鉴定
+对组装后的基因组草图，一般会接下来进行物种鉴定。这里简单介绍一下，可以基于NR库进行注释，对明确注释到科级别的基因组草图，
+可以尝试进一步细化到属级别的POCP ( percentageof conserved proteins ) 分析；对明确注释到属级别的基因组草图，
+可以尝试进一步细化到种级别的ANI（ average nucleotide identity ）分析，种内菌株的精细化鉴定还可以借助系统发育分析，比较基因组分析等方法。
