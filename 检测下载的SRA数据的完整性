@@ -1,0 +1,23 @@
+##https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=vdb-validate
+
+Tool: vdb-validate
+Usage:
+vdb-validate [options] <path/file> [<path/file> ...]
+vdb-validate [options] <accession>
+Analyze downloaded SRA data for corruption and other problems.
+Frequently Used Options:
+General:
+-h 	| 	--help 	Displays ALL options, general usage, and version information.
+-V 	| 	--version 	Display the version of the program.
+-I 	| 	--REFERENTIAL-INTEGRITY <yes | no> 	Check data referential integrity for databases (default: yes).
+-x 	| 	--exhaustive 	Continue checking object for all possible errors (default: false).
+Workflow and piping:
+		--option-file <file> 	Read options and parameters from a file; can be used to script iterative commands.
+Use examples:
+vdb-validate SRR390728
+Performs basic validation to ensure the integrity of a downloaded SRA data file. If all tables and columns are reported as "ok" and "consistent", then the data are correct. If any aspect of the file fails validation, it should be re-acquired from the SRA.
+Possible errors and their solution:
+vdb-validate.2.x info: 'SRR*' could not be found
+This error indicates that the .sra file cannot be found. Confirm that the path to the file is correct.
+failed with curl-error 'CURLE_COULDNT_RESOLVE_HOST'
+The toolkit is attempting to contact or download data from NCBI, but is unable to connect. Please confirm that your computer or server has Internet connectivity.
