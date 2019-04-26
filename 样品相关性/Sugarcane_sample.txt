@@ -1,0 +1,9 @@
+Ac	Ac-1
+Ac	Ac-2
+MMC	MMC-1
+MMC	MMC-2
+Meiosis	Meiosis-1
+Mitosis	Mitosis-1
+Mitosis	Mitosis-2
+Mature	Mature-1
+Mature	Mature-2
